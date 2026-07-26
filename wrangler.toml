@@ -1,0 +1,34 @@
+name = "wavelink-verify"
+main = "worker.js"
+compatibility_date = "2026-07-01"
+
+[vars]
+ROBLOX_CLIENT_ID = "6839799135191518609"
+
+# This Worker's own callback URL — must exactly match a Redirect URL you
+# register on the Roblox app. Fill in your real Worker subdomain after
+# your first `wrangler deploy`, then re-deploy.
+REDIRECT_URI = "https://wavelink-verify.YOUR-SUBDOMAIN.workers.dev/api/oauth/callback"
+
+# Your live GitHub Pages site (no trailing slash)
+SITE_URL = "https://YOUR-USERNAME.github.io/YOUR-REPO"
+
+# Same as SITE_URL — used for CORS
+ALLOWED_ORIGIN = "https://YOUR-USERNAME.github.io"
+
+# Create once with: wrangler kv namespace create SESSIONS
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+
+# Create once with: wrangler d1 create wavelink-db
+# then apply schema.sql (see SETUP.md)
+[[d1_databases]]
+binding = "DB"
+database_name = "wavelink-db"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+# Set the client secret separately — never put it in this file:
+#   wrangler secret put ROBLOX_CLIENT_SECRET
+# (You pasted it in chat, so treat it as compromised — generate a NEW
+# secret on Roblox's dashboard and use that one instead of the old one.)

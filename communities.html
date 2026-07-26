@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Communities — WaveLink</title>
+<meta name="description" content="Your Roblox groups and their WaveLink communities." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="app-shell.css">
+
+<style>
+.groups-list{ display: flex; flex-direction: column; gap: 12px; }
+
+.group-card{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  backdrop-filter: blur(12px);
+}
+
+.group-icon{
+  width: 52px; height: 52px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border-soft);
+  flex-shrink: 0;
+}
+.group-icon.placeholder{ display: grid; place-items: center; color: var(--text-faint); }
+.group-icon.placeholder svg{ width: 22px; height: 22px; }
+
+.group-info{ flex: 1; min-width: 0; }
+.group-info .name{ font-family: var(--font-display); font-size: 15.5px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.group-info .meta{ font-size: 12.5px; color: var(--text-dim); margin-top: 3px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.group-info .meta .dot{ width: 3px; height: 3px; border-radius: 50%; background: var(--text-faint); }
+
+.group-actions{ flex-shrink: 0; display: flex; align-items: center; gap: 10px; }
+
+.owner-tag{
+  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--warn); background: rgba(255,180,84,0.1); border: 1px solid rgba(255,180,84,0.22);
+  padding: 3px 9px; border-radius: 100px;
+}
+
+.empty-state, .error-state, .loading-state{
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-dim);
+  font-size: 14px;
+}
+.loading-state .spinner{
+  width: 22px; height: 22px; margin: 0 auto 16px;
+  border-radius: 50%; border: 2px solid rgba(255,255,255,0.15); border-top-color: var(--accent);
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin{ to{ transform: rotate(360deg); } }
+.error-state{ color: #ff8a8a; }
+</style>
+</head>
+<body>
+
+<div class="bg-layer" aria-hidden="true">
+  <div class="bg-grid"></div>
+  <div class="bg-glow-primary"></div>
+  <div class="bg-glow-secondary"></div>
+  <div id="particles"></div>
+</div>
+
+<div class="sidebar-scrim" id="sidebarScrim"></div>
+
+<div class="app-shell">
+  <aside class="app-sidebar" id="appSidebar">
+    <a href="index.html" class="sidebar-brand">WaveLink</a>
+
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.6" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="3" width="7" height="7" rx="1.6" stroke="currentColor" stroke-width="1.7"/><rect x="3" y="14" width="7" height="7" rx="1.6" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="14" width="7" height="7" rx="1.6" stroke="currentColor" stroke-width="1.7"/></svg>
+        Overview
+      </a>
+      <a href="communities.html" class="sidebar-link active">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        Communities
+      </a>
+      <a href="dashboard.html#discord" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M8 12a4 4 0 108 0 4 4 0 00-8 0z" stroke="currentColor" stroke-width="1.7"/><path d="M4 19c1.6-3.6 4.6-5 8-5s6.4 1.4 8 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        Discord
+      </a>
+      <a href="dashboard.html#analytics" class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 20V10M12 20V4M20 20v-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Analytics
+      </a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="sidebar-user">
+        <div class="avatar" id="sidebarAvatar"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.8"/></svg></div>
+        <div class="sidebar-user-info">
+          <div class="name" id="sidebarUsername">—</div>
+          <div class="sub">● Roblox connected</div>
+        </div>
+      </div>
+      <button class="logout-btn" id="logoutBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Log out
+      </button>
+    </div>
+  </aside>
+
+  <main class="app-main">
+    <div class="mobile-topbar">
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <span class="brand" style="font-size:16px;">WaveLink</span>
+    </div>
+
+    <div class="app-topbar">
+      <div>
+        <h1>Communities</h1>
+        <p class="welcome-sub">Roblox groups you're in. Group owners can create a WaveLink community for moderation and session hosting.</p>
+      </div>
+    </div>
+
+    <div id="groupsContainer">
+      <div class="loading-state">
+        <div class="spinner" aria-hidden="true"></div>
+        Loading your Roblox groups…
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="main.js" defer></script>
+<script src="app-shell.js" defer></script>
+<script src="communities.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+/* ---- Shared: logged-in app shell (sidebar + topbar) ---- */
+body{ overflow-x: hidden; }
+
+.app-shell{
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+}
+
+.app-sidebar{
+  border-right: 1px solid var(--border);
+  background: rgba(8, 11, 18, 0.5);
+  backdrop-filter: blur(10px);
+  padding: 22px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-brand{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  padding: 4px 8px 26px;
+}
+
+.sidebar-nav{ display: flex; flex-direction: column; gap: 2px; }
+
+.sidebar-link{
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dim);
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+.sidebar-link svg{ width: 17px; height: 17px; flex-shrink: 0; }
+.sidebar-link:hover{ background: rgba(255,255,255,0.04); color: var(--text); }
+.sidebar-link.active{
+  background: linear-gradient(135deg, rgba(63,214,255,0.14), rgba(91,127,255,0.08));
+  color: var(--accent-soft);
+  border: 1px solid rgba(63,214,255,0.18);
+}
+
+.sidebar-foot{ margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border-soft); }
+
+.sidebar-user{ display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 10px; }
+.sidebar-user .avatar{ width: 34px; height: 34px; }
+.sidebar-user-info{ flex: 1; min-width: 0; }
+.sidebar-user-info .name{ font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sidebar-user-info .sub{ font-family: var(--font-mono); font-size: 10.5px; color: var(--success); }
+
+.logout-btn{
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.02);
+  color: var(--text-dim);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+.logout-btn:hover{ border-color: rgba(255,90,90,0.3); color: #ff8a8a; }
+.logout-btn svg{ width: 14px; height: 14px; }
+
+.app-main{ padding: 30px 36px 60px; min-width: 0; }
+
+.app-topbar{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.app-topbar h1{
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 4px;
+}
+.app-topbar .welcome-sub{ font-size: 14px; color: var(--text-dim); margin: 0; }
+
+.topbar-status{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--success);
+  padding: 7px 13px;
+  border-radius: 100px;
+  background: rgba(52,224,161,0.1);
+  border: 1px solid rgba(52,224,161,0.2);
+}
+.topbar-status .dot-pulse{ width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: pulse-ring 2s infinite; }
+
+.mobile-topbar{ display: none; }
+
+@media (max-width: 900px){
+  .app-shell{ grid-template-columns: 1fr; }
+  .app-sidebar{
+    position: fixed; inset: 0 auto 0 0; width: 240px; z-index: 150;
+    transform: translateX(-100%);
+    transition: transform 0.3s var(--ease);
+    background: rgba(6,8,14,0.98);
+  }
+  .app-sidebar.open{ transform: translateX(0); }
+  .app-main{ padding: 20px 18px 50px; }
+  .mobile-topbar{
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 4px 20px;
+  }
+  .mobile-menu-btn{
+    width: 36px; height: 36px; border-radius: 9px;
+    border: 1px solid var(--border); background: rgba(255,255,255,0.02);
+    display: grid; place-items: center; cursor: pointer;
+  }
+  .mobile-menu-btn svg{ width: 16px; height: 16px; }
+  .sidebar-scrim{ display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 140; }
+  .sidebar-scrim.open{ display: block; }
+}

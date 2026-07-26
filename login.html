@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Log in — WaveLink</title>
+<meta name="description" content="Log in to WaveLink with your Roblox account." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+<style>
+.auth-shell{ position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; }
+.auth-top{ padding: 26px 0; }
+.auth-main{ flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
+
+.auth-card{
+  width: 100%;
+  max-width: 420px;
+  background: linear-gradient(180deg, rgba(20,27,42,0.85), rgba(11,15,24,0.85));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 40px 80px -30px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.03) inset;
+  padding: 36px 32px 32px;
+  text-align: center;
+}
+
+.auth-card h1{ font-family: var(--font-display); font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 8px; }
+.auth-card > p.sub{ font-size: 14px; color: var(--text-dim); line-height: 1.6; margin: 0 0 28px; }
+
+.roblox-btn{
+  width: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 14px 18px; border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
+  font-family: var(--font-body); font-weight: 600; font-size: 15px;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), background 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.roblox-btn:hover{ border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.06); transform: translateY(-1px); }
+.roblox-btn:disabled{ opacity: 0.7; cursor: default; transform: none; }
+.roblox-btn .glyph{ width: 20px; height: 20px; border-radius: 5px; background: linear-gradient(155deg, #f2f2f2, #b9b9b9); display: grid; place-items: center; flex-shrink: 0; }
+.roblox-btn .glyph svg{ width: 12px; height: 12px; }
+.roblox-btn .spinner{
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.18); border-top-color: var(--accent);
+  animation: spin 0.7s linear infinite; display: none;
+}
+.roblox-btn.loading .spinner{ display: inline-block; }
+.roblox-btn.loading .glyph{ display: none; }
+@keyframes spin{ to{ transform: rotate(360deg); } }
+
+.auth-note{ font-size: 12.5px; color: var(--text-faint); line-height: 1.6; margin-top: 22px; }
+.auth-note a{ color: var(--accent-soft); }
+
+.auth-error{
+  display: none;
+  font-size: 13px;
+  color: #ff8a8a;
+  background: rgba(255, 90, 90, 0.08);
+  border: 1px solid rgba(255, 90, 90, 0.22);
+  border-radius: 10px;
+  padding: 11px 13px;
+  margin-bottom: 20px;
+  text-align: left;
+  line-height: 1.5;
+}
+.auth-error.visible{ display: block; }
+
+.auth-back{ display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--text-dim); margin-top: 24px; }
+.auth-back svg{ width: 14px; height: 14px; }
+.auth-back:hover{ color: var(--text); }
+</style>
+</head>
+<body>
+
+<div class="bg-layer" aria-hidden="true">
+  <div class="bg-grid"></div>
+  <div class="bg-glow-primary"></div>
+  <div class="bg-glow-secondary"></div>
+  <div id="particles"></div>
+</div>
+
+<div class="auth-shell">
+  <header class="auth-top">
+    <div class="container">
+      <a href="index.html" class="brand">WaveLink</a>
+    </div>
+  </header>
+
+  <main class="auth-main">
+    <div class="auth-card reveal in">
+      <h1>Log in to WaveLink</h1>
+      <p class="sub">Sign in with your Roblox account to access your dashboard.</p>
+
+      <div class="auth-error" id="authError"></div>
+
+      <button class="roblox-btn" id="robloxLoginBtn" type="button">
+        <span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3" stroke="#0b0e14" stroke-width="2"/></svg></span>
+        <span class="spinner" aria-hidden="true"></span>
+        <span class="btn-label">Continue with Roblox</span>
+      </button>
+
+      <p class="auth-note">By continuing, you agree to WaveLink's <a href="terms.html" target="_blank" rel="noopener">Terms of Service</a> and <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>. WaveLink is not affiliated with Roblox Corporation.</p>
+    </div>
+  </main>
+
+  <div style="text-align:center; padding-bottom: 32px;">
+    <a href="index.html" class="auth-back">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to home
+    </a>
+  </div>
+</div>
+
+<script src="main.js" defer></script>
+<script src="auth-demo.js" defer></script>
+</body>
+</html>

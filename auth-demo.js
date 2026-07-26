@@ -19,7 +19,7 @@
 (function(){
   "use strict";
 
-  var WORKER_URL = "https://wavelink-verify.YOUR-SUBDOMAIN.workers.dev";
+   var WORKER_URL = "https://wavelink-verify.waveware-wavelink.workers.dev";
 
   var loginBtn = document.getElementById('robloxLoginBtn');
   var errorBox = document.getElementById('authError');
